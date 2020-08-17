@@ -1,0 +1,190 @@
+swagger: '2.0'
+info:
+  title: Library Management API
+  description: API for managing library
+  version: v1
+basePath: /
+schemes:
+  - https
+consumes:
+  - application/json
+tags:
+  - name: "Manage Library"
+    description: Microservice to manage all the operations for library
+paths:
+  /:
+    get:
+      summary: Get all books
+      description: Get all books
+      operationId: getBooks
+      produces:
+        - application/json
+      tags:
+        - "Get all books from library"
+      responses:
+        200:
+          description: OK
+    
+    post:
+      summary: Add book
+      description: Add book
+      operationId: addBook
+      produces:
+        - application/json
+      tags:
+        - "Add a new book to library"
+      parameters:
+        - in: body
+          name: Item
+          description: Request object carrying list of weight, values and allowed capacity
+          schema:
+            $ref: '#/definitions/book'
+          required: true
+      deprecated: false
+      responses:
+        200:
+          description: returns successfully created Object
+          schema:
+            $ref: '#/definitions/bookResponse'
+        400:
+          description: Bad Request.
+          schema:
+            $ref: '#/definitions/BadRequest'
+        500:
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/Error'
+
+definitions:
+  Error:
+    type: object
+    properties:
+      code:
+        type: string
+      reference:
+        type: string
+      message:
+        type: string
+  BadRequest:
+    type: object
+    properties:
+      invalid:
+        type: array
+        description: The list of invalid fields in the request.
+        items:
+          type: string
+  ApiError:
+    type: object
+    required:
+      - method
+      - requestUri
+      - status
+      - timestamp
+      - message
+      - debugMessage
+    properties:
+      method:
+        type: string
+        description: The request method type e.g. GET, POST.
+      requestUri:
+        type: string
+        description: The request URI.
+      status:
+        type: string
+        description: The textual representation of the response status.
+      timestamp:
+        type: string
+        description: The date and time (dd-MM-yyyy hh:mm:ss) the error occured.
+      message:
+        type: string
+        description:  High level error message.
+      debugMessage:
+        type: string
+        description: Detailed error message.
+      subErrors:
+        type: array
+        items:
+          $ref: '#/definitions/ApiValidationError'
+        description: The list of invalid fields in the request.
+  ApiValidationError:
+    type: object
+    required:
+      - field
+      - rejectedValue
+      - message
+    properties:
+      field:
+        type: string
+        description: The field that has failed validation.
+      rejectedValue:
+        type: string
+        description: The value that has failed validation.
+      message:
+        type: string
+        description: The reason and advice for failed validation.
+  bookResponse:
+    type: object
+    properties:
+      books:
+        type: array
+        description: List of books
+        items:
+          $ref: '#/definitions/book'
+  borrow:
+    type: object
+    properties:
+      userId:
+        type: integer
+        description: Id of user
+        example: user#1
+      book:
+        type: array
+        description: List of the book
+        items:
+          $ref: '#/definitions/book'
+  book:
+    type: object
+    properties:
+      isbn:
+        type: string
+        description: ISBN of book.
+        example: 1345-3243-4564-2235
+      name:
+        type: string
+        description: Name of the book
+        example: Mystic Musing
+      author:
+        type: string
+        description: Author of book.
+        example: Sadhguru
+      price:
+        type: integer
+        description: Selling price of the book
+        example: 350
+      isAvailable:
+        type: boolean
+        description: Flag to check if book available
+        example: true
+      user:
+        type: object
+        description: User who borrow the book
+        items:
+          $ref: '#/definitions/User'
+  User:
+    properties:
+      userId:
+        type: string
+        description: Name of item
+        example: user#1
+      name:
+        type: string
+        description: Weight of item
+        example: name#1
+      age:
+        type: integer
+        description: Value of item
+        example: 10
+      isMember:
+        type: boolean
+        description: Is user active
+        example: true
