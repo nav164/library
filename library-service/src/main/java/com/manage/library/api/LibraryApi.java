@@ -7,6 +7,6 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 public class LibraryApi {
 	public static void main(String... args) {
 		new SpringApplicationBuilder().sources(LibraryApi.class)
-		.run(args);
+				.run(args);
 	}
 }

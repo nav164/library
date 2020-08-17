@@ -29,26 +29,26 @@ import reactor.test.StepVerifier;
 @SpringBootTest
 @ContextConfiguration(classes = LibraryApi.class)
 public class BookServiceImplTest {
-	
-	
+
+
 	@Autowired
 	private BookService bookService;
-	
+
 	@Test
 	@DisplayName("should fetch all the books")
 	public void shouldGetAllBooks() {
 		Flux<Book> bookList = this.bookService.getBooks();
-		
+
 		Predicate<Book> match = book -> bookList.any(b -> b.equals(book)).block();
-		
+
 		StepVerifier.create(bookList)
-		.expectNextMatches(match)
-		.expectNextMatches(match)
-		.expectNextMatches(match)
-		.expectNextCount(LibraryUtility.books().size() - 3)
-		.verifyComplete();
+				.expectNextMatches(match)
+				.expectNextMatches(match)
+				.expectNextMatches(match)
+				.expectNextCount(LibraryUtility.books().size() - 3)
+				.verifyComplete();
 	}
-	
+
 	@Test
 	@DisplayName("should borrow the book and return list of all the books")
 	public void shouldBorrowTheBook() {
@@ -63,19 +63,19 @@ public class BookServiceImplTest {
 		Borrow borrow = new Borrow();
 		borrow.setUserId(1);
 		borrow.setBook(bookLst);
-		
+
 		Flux<Book> bookList = this.bookService.borrowBook(borrow);
-		
+
 		Predicate<Book> match = book -> bookList.any(b -> b.equals(book)).block();
-		
+
 		StepVerifier.create(bookList)
-		.expectNextMatches(match)
-		.expectNextMatches(match)
-		.expectNextMatches(match)
-		.expectNextCount(LibraryUtility.books().size() - 3)
-		.verifyComplete();
+				.expectNextMatches(match)
+				.expectNextMatches(match)
+				.expectNextMatches(match)
+				.expectNextCount(LibraryUtility.books().size() - 3)
+				.verifyComplete();
 	}
-	
+
 	@Test
 	@DisplayName("should throw an exception CopyAlreadyBorrowedException when user try to borrow the book he already have")
 	public void shouldNotAllowBorrowingSameBook() {
@@ -91,17 +91,17 @@ public class BookServiceImplTest {
 		Borrow borrow = new Borrow();
 		borrow.setUserId(2);
 		borrow.setBook(bookLst);
-		
+
 		this.bookService.borrowBook(borrow).subscribe();
-		
+
 		try {
 			this.bookService.borrowBook(borrow).subscribe();
 		} catch(CopyAlreadyBorrowedException e) {
 			Assertions.assertEquals("Copy of book already borrowed", e.getMessage());
 		}
-		
+
 	}
-	
+
 	@Test
 	@DisplayName("should throw an exception BookLimitExceed when user try to borrow the book he already have")
 	public void shouldNotAllowBorrowMoreThenTwoBookWhileCallingBorrowMethod() {
@@ -114,7 +114,7 @@ public class BookServiceImplTest {
 		bk.setPrice(200);
 		bk.setUser(null);
 		bookLst.add(bk);
-		
+
 		bk = new Book();
 		bk.setIsbn("isbn2");
 		bk.setName("name2");
@@ -123,7 +123,7 @@ public class BookServiceImplTest {
 		bk.setPrice(200);
 		bk.setUser(null);
 		bookLst.add(bk);
-		
+
 		bk = new Book();
 		bk.setIsbn("isbn3");
 		bk.setName("name3");
@@ -132,18 +132,18 @@ public class BookServiceImplTest {
 		bk.setPrice(200);
 		bk.setUser(null);
 		bookLst.add(bk);
-		
+
 		Borrow borrow = new Borrow();
 		borrow.setUserId(3);
 		borrow.setBook(bookLst);
-		
+
 		try {
 			this.bookService.borrowBook(borrow).subscribe();
 		} catch(BookLimitExceed e) {
 			Assertions.assertEquals("Limit exceeded to borrow the book", e.getMessage());
 		}
 	}
-	
+
 	@Test
 	@DisplayName("should return the book and render list of all the books")
 	public void shouldReturnTheBook() {
@@ -158,19 +158,19 @@ public class BookServiceImplTest {
 		Borrow borrow = new Borrow();
 		borrow.setUserId(1);
 		borrow.setBook(bookLst);
-		
+
 		Flux<Book> bookList = this.bookService.returnBook(borrow);
-		
+
 		Predicate<Book> match = book -> bookList.any(b -> b.equals(book)).block();
-		
+
 		StepVerifier.create(bookList)
-		.expectNextMatches(match)
-		.expectNextMatches(match)
-		.expectNextMatches(match)
-		.expectNextCount(LibraryUtility.books().size() - 3)
-		.verifyComplete();
+				.expectNextMatches(match)
+				.expectNextMatches(match)
+				.expectNextMatches(match)
+				.expectNextCount(LibraryUtility.books().size() - 3)
+				.verifyComplete();
 	}
-	
+
 	@Test
 	@DisplayName("should return true if try to borrow one book")
 	public void shouldAllowBorrow() {
@@ -186,10 +186,10 @@ public class BookServiceImplTest {
 		Borrow borrow = new Borrow();
 		borrow.setUserId(1);
 		borrow.setBook(bookLst);
-		
+
 		Assertions.assertTrue(bookService.canBorrow(borrow));
 	}
-	
+
 	@Test
 	@DisplayName("should return false when try to borrow three book")
 	public void shouldNotAllowBorrowMoreThenTwoBook() {
@@ -202,7 +202,7 @@ public class BookServiceImplTest {
 		bk.setPrice(200);
 		bk.setUser(null);
 		bookLst.add(bk);
-		
+
 		bk = new Book();
 		bk.setIsbn("isbn2");
 		bk.setName("name2");
@@ -211,7 +211,7 @@ public class BookServiceImplTest {
 		bk.setPrice(200);
 		bk.setUser(null);
 		bookLst.add(bk);
-		
+
 		bk = new Book();
 		bk.setIsbn("isbn3");
 		bk.setName("name3");
@@ -220,14 +220,14 @@ public class BookServiceImplTest {
 		bk.setPrice(200);
 		bk.setUser(null);
 		bookLst.add(bk);
-		
+
 		Borrow borrow = new Borrow();
 		borrow.setUserId(1);
 		borrow.setBook(bookLst);
-		
+
 		Assertions.assertFalse(bookService.canBorrow(borrow));
 	}
-	
+
 	@Test
 	@DisplayName("should return Book object if it is already borrowed")
 	public void shouldReturnNullIfCopyOfBookNeverBorrowed() {
@@ -243,11 +243,11 @@ public class BookServiceImplTest {
 		Borrow borrow = new Borrow();
 		borrow.setUserId(1);
 		borrow.setBook(bookLst);
-		
+
 		Book book = this.bookService.isBorrowed(borrow);
 		Assertions.assertNull(book);
 	}
-	
+
 	@Test
 	@DisplayName("should return Book object if it is already borrowed")
 	public void shouldReturnBookObjectIfCopyOfBookAlredyBorrowed() {
@@ -263,7 +263,7 @@ public class BookServiceImplTest {
 		Borrow borrow = new Borrow();
 		borrow.setUserId(1);
 		borrow.setBook(bookLst);
-		
+
 		this.bookService.borrowBook(borrow);
 		Book book = this.bookService.isBorrowed(borrow);
 		Assertions.assertEquals(bk, book);

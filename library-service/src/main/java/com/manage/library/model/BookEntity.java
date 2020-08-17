@@ -6,12 +6,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BookEntity {
-	
+
 	private int id;
 	private String name;
 	private String isbn;
 	private String author;
-	private int price;	
+	private int price;
 	private boolean isAvailable;
 	private User user;
 }

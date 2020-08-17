@@ -30,50 +30,48 @@ import reactor.core.publisher.Flux;
 @WebFluxTest(controllers = ManageLibrary.class)
 @ContextConfiguration(classes = LibraryApi.class)
 public class ManageLibraryTest {
-	
+
 	@MockBean
 	BookService bookService;
-	
+
 	@Autowired
-    private WebTestClient webClient;
-	
+	private WebTestClient webClient;
+
 	@Test
 	@DisplayName("should return all the books")
-    public void shouldListAllTheBooks() throws Exception {
+	public void shouldListAllTheBooks() throws Exception {
 		Flux<Book> bookFlux = Flux.fromIterable(BookMapper.mapBook(LibraryUtility.books()));
-		
-		Mockito
-        .when(bookService.getBooks())
-        .thenReturn(bookFlux);
-		
+
+		Mockito.when(bookService.getBooks())
+				.thenReturn(bookFlux);
+
 		webClient.get().uri("/")
-		.accept(MediaType.APPLICATION_JSON)
-        .exchange()
-        .expectStatus().isOk()
-        .expectBodyList(Book.class).hasSize(LibraryUtility.books().size())
-        .isEqualTo(BookMapper.mapBook(LibraryUtility.books()));
-    }
-	
+				.accept(MediaType.APPLICATION_JSON)
+				.exchange()
+				.expectStatus().isOk()
+				.expectBodyList(Book.class).hasSize(LibraryUtility.books().size())
+				.isEqualTo(BookMapper.mapBook(LibraryUtility.books()));
+	}
+
 	@Test
 	@DisplayName("should return http status 204 (No book found)")
-    public void shouldReturnNoBook() throws Exception {
+	public void shouldReturnNoBook() throws Exception {
 		Flux<Book> bookFlux = Flux.fromIterable(BookMapper.mapBook(new ArrayList<BookEntity>()));
-		
-		Mockito
-        .when(bookService.getBooks())
-        .thenReturn(bookFlux);
-		
+
+		Mockito.when(bookService.getBooks())
+				.thenReturn(bookFlux);
+
 		webClient.get().uri("/")
-		.accept(MediaType.APPLICATION_JSON)
-        .exchange()
-        .expectStatus().isNoContent();
-    }
-	
+				.accept(MediaType.APPLICATION_JSON)
+				.exchange()
+				.expectStatus().isNoContent();
+	}
+
 	@Test
 	@DisplayName("should return the list of books with borrowed details")
-    public void shouldBorrowTheBook() throws Exception {
+	public void shouldBorrowTheBook() throws Exception {
 		Flux<Book> bookFlux = Flux.fromIterable(BookMapper.mapBook(LibraryUtility.books()));
-		
+
 		Book book = new Book();
 		book.setIsbn("isbn1");
 		book.setName("name1");
@@ -85,25 +83,24 @@ public class ManageLibraryTest {
 		Borrow borrow = new Borrow();
 		borrow.setUserId(1);
 		borrow.setBook(bookList);
-		
-		Mockito
-        .when(bookService.borrowBook(borrow))
-        .thenReturn(bookFlux);
-		
+
+		Mockito.when(bookService.borrowBook(borrow))
+				.thenReturn(bookFlux);
+
 		webClient.put().uri("/")
-		.contentType(MediaType.APPLICATION_JSON)
-		.body(BodyInserters.fromObject(borrow))
-        .exchange()
-        .expectStatus().isOk()
-        .expectBodyList(Book.class).hasSize(LibraryUtility.books().size())
-        .isEqualTo(BookMapper.mapBook(LibraryUtility.books()));
-    }
-	
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(BodyInserters.fromObject(borrow))
+				.exchange()
+				.expectStatus().isOk()
+				.expectBodyList(Book.class).hasSize(LibraryUtility.books().size())
+				.isEqualTo(BookMapper.mapBook(LibraryUtility.books()));
+	}
+
 	@Test
 	@DisplayName("should return the book to the library")
-    public void shouldReturnTheBook() throws Exception {
+	public void shouldReturnTheBook() throws Exception {
 		Flux<Book> bookFlux = Flux.fromIterable(BookMapper.mapBook(LibraryUtility.books()));
-		
+
 		Book book = new Book();
 		book.setIsbn("isbn1");
 		book.setName("name1");
@@ -115,17 +112,16 @@ public class ManageLibraryTest {
 		Borrow borrow = new Borrow();
 		borrow.setUserId(1);
 		borrow.setBook(bookList);
-		
-		Mockito
-        .when(bookService.returnBook(borrow))
-        .thenReturn(bookFlux);
-		
+
+		Mockito.when(bookService.returnBook(borrow))
+				.thenReturn(bookFlux);
+
 		webClient.put().uri("/return")
-		.contentType(MediaType.APPLICATION_JSON)
-		.body(BodyInserters.fromObject(borrow))
-        .exchange()
-        .expectStatus().isOk()
-        .expectBodyList(Book.class).hasSize(LibraryUtility.books().size())
-        .isEqualTo(BookMapper.mapBook(LibraryUtility.books()));
-    }
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(BodyInserters.fromObject(borrow))
+				.exchange()
+				.expectStatus().isOk()
+				.expectBodyList(Book.class).hasSize(LibraryUtility.books().size())
+				.isEqualTo(BookMapper.mapBook(LibraryUtility.books()));
+	}
 }

@@ -8,7 +8,7 @@ import com.manage.library.model.BookEntity;
 import io.swagger.model.Book;
 
 public class BookMapper {
-	
+
 	/**
 	 * This method will map the model object of book to response object of book
 	 * @author Naveen
