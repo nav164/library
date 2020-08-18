@@ -25,8 +25,8 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 	 }
 	 
 	 @RequestMapping(produces = "application/json")
-	 @ExceptionHandler(CopyAlreadyBorrowedException.class)
-	 public ResponseEntity<?> handleException(CopyAlreadyBorrowedException ex) {
+	 @ExceptionHandler(BookAlreadyBorrowedException.class)
+	 public ResponseEntity<?> handleException(BookAlreadyBorrowedException ex) {
 		 	ApiError apiError = new ApiError();
 		 	apiError.setMessage(ex.getMessage());
 		 	apiError.setStatus(HttpStatus.BAD_REQUEST.toString());

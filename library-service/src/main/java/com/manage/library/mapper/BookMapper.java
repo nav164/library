@@ -12,11 +12,11 @@ public class BookMapper {
 	/**
 	 * This method will map the model object of book to response object of book
 	 * @author Naveen
-	 * @param bookEntity
+	 * @param bookEntity BookEntity object
 	 * @return List of books
 	 */
 	public static List<Book> mapBook(List<BookEntity> bookEntity) {
-		List<Book> bookList = new ArrayList<Book>();
+		List<Book> bookList = new ArrayList<>();
 		bookEntity.forEach(b -> {
 			Book book = new Book();
 			book.setIsbn(b.getIsbn());

@@ -12,7 +12,7 @@ import com.manage.library.model.User;
 public class LibraryUtility {
 
 	public static List<BookEntity> books() {
-		List<BookEntity> bookList = new ArrayList<BookEntity>();
+		List<BookEntity> bookList = new ArrayList<>();
 
 		BookEntity book = new BookEntity();
 		book.setIsbn("isbn1");
@@ -108,7 +108,7 @@ public class LibraryUtility {
 	}
 
 	public static Map<Integer, User> getUserDetails() {
-		Map<Integer, User> userMap = new HashMap<Integer, User>();
+		Map<Integer, User> userMap = new HashMap<>();
 
 		User user = new User();
 		user.setUserId(1);
