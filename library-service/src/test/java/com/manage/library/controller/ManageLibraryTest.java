@@ -36,10 +36,11 @@ public class ManageLibraryTest {
 
 	@Test
 	@DisplayName("should return all the books")
-	public void shouldListAllTheBooks() {
+	public void shouldListAllTheBooks() throws Exception {
 		Flux<Book> bookFlux = Flux.fromIterable(BookMapper.mapBook(LibraryUtility.books()));
 
-		Mockito.when(bookService.getBooks())
+		Mockito
+				.when(bookService.getBooks())
 				.thenReturn(bookFlux);
 
 		webClient.get().uri("/")
@@ -52,10 +53,11 @@ public class ManageLibraryTest {
 
 	@Test
 	@DisplayName("should return http status 204 (No book found)")
-	public void shouldReturnNoBook() {
+	public void shouldReturnNoBook() throws Exception {
 		Flux<Book> bookFlux = Flux.fromIterable(BookMapper.mapBook(new ArrayList<>()));
 
-		Mockito.when(bookService.getBooks())
+		Mockito
+				.when(bookService.getBooks())
 				.thenReturn(bookFlux);
 
 		webClient.get().uri("/")
@@ -66,8 +68,7 @@ public class ManageLibraryTest {
 
 	@Test
 	@DisplayName("should return the list of books with borrowed details")
-	public void shouldBorrowTheBook() {
-		Flux<Book> bookFlux = Flux.fromIterable(BookMapper.mapBook(LibraryUtility.books()));
+	public void shouldBorrowTheBook() throws Exception {
 
 		Book book = new Book();
 		book.setIsbn("isbn1");
@@ -81,12 +82,13 @@ public class ManageLibraryTest {
 		borrow.setUserId(1);
 		borrow.setBook(bookList);
 
-		Mockito.when(bookService.borrowBook(borrow))
-				.thenReturn(bookFlux);
+		Mockito
+				.when(bookService.borrowBook(borrow))
+				.thenReturn(BookMapper.mapBook(LibraryUtility.books()));
 
 		webClient.put().uri("/")
 				.contentType(MediaType.APPLICATION_JSON)
-				.body(BodyInserters.fromValue(borrow))
+				.body(BodyInserters.fromObject(borrow))
 				.exchange()
 				.expectStatus().isOk()
 				.expectBodyList(Book.class).hasSize(LibraryUtility.books().size())
@@ -95,8 +97,7 @@ public class ManageLibraryTest {
 
 	@Test
 	@DisplayName("should return the book to the library")
-	public void shouldReturnTheBook() {
-		Flux<Book> bookFlux = Flux.fromIterable(BookMapper.mapBook(LibraryUtility.books()));
+	public void shouldReturnTheBook() throws Exception {
 
 		Book book = new Book();
 		book.setIsbn("isbn1");
@@ -110,12 +111,13 @@ public class ManageLibraryTest {
 		borrow.setUserId(1);
 		borrow.setBook(bookList);
 
-		Mockito.when(bookService.returnBook(borrow))
-				.thenReturn(bookFlux);
+		Mockito
+				.when(bookService.returnBook(borrow))
+				.thenReturn(BookMapper.mapBook(LibraryUtility.books()));
 
 		webClient.put().uri("/return")
 				.contentType(MediaType.APPLICATION_JSON)
-				.body(BodyInserters.fromValue(borrow))
+				.body(BodyInserters.fromObject(borrow))
 				.exchange()
 				.expectStatus().isOk()
 				.expectBodyList(Book.class).hasSize(LibraryUtility.books().size())
