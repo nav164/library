@@ -40,11 +40,13 @@ public class BookServiceImpl implements BookService{
 	 * @author Naveen
 	 * @return Stream of updated list
 	 */
-	public Flux<Book> borrowBook(Borrow borrow) {
+	public List<Book> borrowBook(Borrow borrow) {
 		if(!this.canBorrow(borrow))
 			throw new BookLimitExceed(LibraryConstant.limit_exceeds);
 		if(null != this.isBorrowed(borrow))
 			throw new BookAlreadyBorrowedException(LibraryConstant.already_borrowed);
+		if(!this.sameBookCheck(borrow.getBook()))
+			throw new BookAlreadyBorrowedException(LibraryConstant.same_book);
 		borrow.getBook().forEach(book -> {
 			for(BookEntity bookEntity : bookList) {
 				if(bookEntity.getIsbn().equalsIgnoreCase(book.getIsbn()) && bookEntity.isAvailable()) {
@@ -54,7 +56,7 @@ public class BookServiceImpl implements BookService{
 				}
 			}
 		});
-		return Flux.fromIterable(BookMapper.mapBook(bookList));
+		return BookMapper.mapBook(bookList);
 	}
 	
 	/**
@@ -62,7 +64,7 @@ public class BookServiceImpl implements BookService{
 	 * @author Naveen
 	 * @return Stream of updated list
 	 */
-	public Flux<Book> returnBook(Borrow borrow) {
+	public List<Book> returnBook(Borrow borrow) {
 		borrow.getBook().forEach(book -> {
 			for(BookEntity bookEntity : bookList) {
 				if(bookEntity.getIsbn().equalsIgnoreCase(book.getIsbn()) 
@@ -74,7 +76,7 @@ public class BookServiceImpl implements BookService{
 				}
 			}
 		});
-		return Flux.fromIterable(BookMapper.mapBook(bookList));
+		return BookMapper.mapBook(bookList);
 	}
 	
 	/**
@@ -92,6 +94,21 @@ public class BookServiceImpl implements BookService{
 				return requestedBook;
 		}
 		return null;
+	}
+
+	/**
+	 * This method will check if the cart have two same book with same isbn
+	 * @author Naveen
+	 * @param book List of book
+	 * @return boolean value
+	 */
+	public boolean sameBookCheck(List<Book> book) {
+		for(Book b: book) {
+			long count = book.stream().filter(bk -> bk.getIsbn().equalsIgnoreCase(b.getIsbn())).count();
+			if(count>1)
+				return false;
+		}
+		return true;
 	}
 	
 	/**

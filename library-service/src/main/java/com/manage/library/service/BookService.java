@@ -4,8 +4,10 @@ import io.swagger.model.Book;
 import io.swagger.model.Borrow;
 import reactor.core.publisher.Flux;
 
+import java.util.List;
+
 public interface BookService {
 	Flux<Book> getBooks();
-	Flux<Book> borrowBook(Borrow borrow);
-	Flux<Book> returnBook(Borrow borrow);
+	List<Book> borrowBook(Borrow borrow);
+	List<Book> returnBook(Borrow borrow);
 }

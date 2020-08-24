@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.model.Book;
 import io.swagger.model.Borrow;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.manage.library.service.BookService;
@@ -16,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -39,16 +42,16 @@ public class ManageLibrary {
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "OK") })
 	@PutMapping(value="/", produces = { "application/json", "application/stream+json", "text/event-stream" })
-	public Flux<Book> borrowBook(@RequestBody Borrow borrow) {
-		return this.bookService.borrowBook(borrow);
+	public ResponseEntity<List<Book>> borrowBook(@RequestBody Borrow borrow) {
+		return ResponseEntity.ok(this.bookService.borrowBook(borrow));
 	}
 
 	@ApiOperation(value = "Return books", nickname = "returnBook", notes = "Return books", tags={ "Return books from library", })
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "OK") })
 	@PutMapping(value="/return", produces = { "application/json", "application/stream+json", "text/event-stream" })
-	public Flux<Book> returnBook(@RequestBody Borrow borrow) {
-		return this.bookService.returnBook(borrow);
+	public ResponseEntity<List<Book>> returnBook(@RequestBody Borrow borrow) {
+		return ResponseEntity.ok(this.bookService.returnBook(borrow));
 	}
 
 }
