@@ -3,6 +3,12 @@
 ## Overview
 This microservice will manage the library. It will allow to borrow and return the books.
 
+Maven module approach is used in the microservice which contains below modules:
+- library-spec (Specification of  microservice)
+- library-service (Actual logic implementation)
+
+pom.xml in root level is parent pom
+ 
 ## Approach Used
 Test driven development
 
